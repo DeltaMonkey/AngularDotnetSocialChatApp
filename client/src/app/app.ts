@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +7,16 @@ import { Component, signal } from '@angular/core';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('client');
-  protected readonly testText = 'client';
+export class App implements OnInit {
+  private http = inject(HttpClient); 
+  protected readonly title = signal('Social Chat App');
+  protected readonly testText = 'Social Chat App';
+
+  ngOnInit(): void {
+    this.http.get("https://localhost:5001/api/members").subscribe({
+      next: response => console.log(response),
+      error: error => console.log(error),
+      complete: () => console.log('Completed the http request')
+    })
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
+import { LoginCreds } from '../../types/appUser';
 
 @Component({
   selector: 'app-nav',
@@ -9,22 +10,25 @@ import { AccountService } from '../../core/services/account-service';
   styleUrl: './nav.css'
 })
 export class Nav {
-  private accountService = inject(AccountService) 
-  protected creds: any = {}
-  protected loggedIn = signal(false)
+  protected accountService = inject(AccountService) 
+  protected creds: LoginCreds = {
+    email: '',
+    password: ''
+  }
 
   login() {
     this.accountService.login(this.creds).subscribe({
       next: result => {
-        console.log(result);
-        this.loggedIn.set(true);
-        this.creds = {}
+        this.creds = {
+          email: '',
+          password: ''
+        }
       },
       error: error => alert(error.message)
     });
   }
 
   logout() {
-    this.loggedIn.set(false);
+    this.accountService.logout();
   }
 }

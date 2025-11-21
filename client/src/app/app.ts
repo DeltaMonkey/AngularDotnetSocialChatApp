@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { Nav } from '../layout/nav/nav';
 import { AccountService } from '../core/services/account-service';
 import { Home } from "../features/home/home";
+import { AppUser } from '../types/appUser';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class App implements OnInit {
   private http = inject(HttpClient); 
   protected readonly title = signal('Social Chat App');
   protected readonly testText = 'Social Chat App';
-  protected members = signal<any>([])
+  protected members = signal<AppUser[]>([])
 
   async ngOnInit() {
     this.members.set(await this.getMembers());
@@ -32,7 +33,7 @@ export class App implements OnInit {
 
   async getMembers() {
     try {
-      return lastValueFrom(this.http.get('https://localhost:5001/api/members'))
+      return lastValueFrom(this.http.get<AppUser[]>('https://localhost:5001/api/members'))
     } catch (error) {
       console.log(error);
       throw error;
